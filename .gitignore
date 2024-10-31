@@ -1,9 +1,6 @@
-config/qwen2_72b.yaml
-data/**/OlympicRAG/
 data/app/*/
 data/infer/*/
 data/tune/*/
-examples/OlympicRAG/
 examples/*/debug.py
 third_party/LongBench/data*/
 third_party/LongBench/pred*/

@@ -1,4 +1,4 @@
-# Educating LLMs like Human Students: Structure-aware Injection of Domain Knowledge
+# Structure-aware Domain Knowledge Injection for Large Language Models
 
 This project focuses on efficient and effective (domain) knowledge injection. Our method is evaluated by two settings:
 1. free-form closed-book question answering on LongBench, which requires factual knowledge to generate answers without context references;

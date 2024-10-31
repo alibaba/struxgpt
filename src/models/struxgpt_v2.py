@@ -364,11 +364,13 @@ class StructItem(StructItemBase):
         data_dict: Dict[str, Union[str, List[str]]] = {
             'scope': title,
             'aspects': [],
-            'raw_query': None,  # TODO: synchronize
+            'raw_query': [],
             'raw_response': None
         }
         sent_num_offset = 0
         for struct_res in struct_list:
+            data_dict['raw_query'].extend(StruXGPT.remapping_sentence(struct_res.raw_query))
+
             sent_num = struct_res.aspects[-1].sent_range[1]
             if mode == 'concat':
                 for aspect in struct_res.aspects:
@@ -392,6 +394,8 @@ class StructItem(StructItemBase):
                 raise NotImplementedError(mode)
             
             sent_num_offset += sent_num
+        
+        data_dict['raw_query'] = StruXGPT.mapping_sentence(data_dict['raw_query'])
 
         return StructItem(struct_dict=data_dict)
 

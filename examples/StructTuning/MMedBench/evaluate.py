@@ -50,10 +50,8 @@ def mmedbench_parse_answer(answer: str):
     else:
         pattern = "(.*). "
 
-    try:
-        return re.findall(pattern, answer)[0]
-    except:
-        return answer
+    res = re.findall(pattern, answer)
+    return res[0] if len(res) else answer
 
 
 def eval_mmedbench(args):
@@ -68,14 +66,19 @@ def eval_mmedbench(args):
         assert len(questions) == len(answers)
         predictions = evaluator(questions, batched=True, bs=BATCH_SIZE, progress_desc=lang)
         assert len(predictions) == len(answers)
-        accuracy = [eval_accuracy(mmedbench_parse_answer(pred), ans) for pred, ans in zip(predictions, answers)]
+        accuracy = [eval_accuracy(mmedbench_parse_answer(pred), 
+                                  mmedbench_parse_answer(ans)) for pred, ans in zip(predictions, answers)]
         acc = np.mean(accuracy)
         acc_dict[lang] = acc
-    
-    print(f'{model_name}: ', end='')
+
+    s = f'{model_name}:\n'
     for lang, acc in acc_dict.items():
-        print(f'{lang}={acc*100:.2f}%; ', end='')
-    print(f'Average={np.mean(list(acc_dict.values()))*100.:.2f}%.')
+        s += f'{lang}={acc*100:.2f}%; '
+    s += f'Average={np.mean(list(acc_dict.values()))*100.:.2f}%.'
+
+    print(s)
+    with open('./eval.log', 'a') as f:
+        f.write(s + '\n\n')
 
 
 if __name__ == '__main__':
