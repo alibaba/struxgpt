@@ -1,0 +1,14 @@
+model:
+  model_name_or_path: "./weights/StruXGPT-v2-Llama2-7B"
+  model_type: "llama2"
+  use_vllm: True
+  prompt_system_path: "./src/templates/pure_struct_v2/struct_template_system.md"
+  prompt_template_path: "./src/templates/pure_struct_v2/struct_template_input.md"
+  max_output_length: 2048
+struct_keys:
+  struct_key: "Aspects"
+  aspect_key: "AspectName"
+  format_type: "YAML"
+data:
+  sent_token_spacy: False
+

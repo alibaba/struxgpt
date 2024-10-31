@@ -1,0 +1,3 @@
+```yaml
+{yaml_output}
+```

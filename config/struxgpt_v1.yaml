@@ -1,0 +1,12 @@
+model:
+  model_name_or_path: "./weights/StruXGPT-v1-Qwen1_5-7B"
+  model_type: "qwen"
+  use_vllm: True
+  prompt_system_path: "./src/templates/pure_struct_v1/struct_template_system.md"
+  prompt_template_path: "./src/templates/pure_struct_v1/struct_template_input.md"
+  max_output_length: 2048
+struct_keys:
+  format_type: "Vanilla"
+data:
+  sent_token_spacy: False
+

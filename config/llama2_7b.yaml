@@ -1,0 +1,8 @@
+model:
+  model_name_or_path: "./weights/Llama-2-7b-chat-hf"
+  model_type: "llama2"
+  use_vllm: True
+  prompt_system: "You are a helpful assistant."
+  max_output_length: 128
+
+

@@ -1,0 +1,8 @@
+model:
+  model_name_or_path: "./third_party/LLaMA-Factory/output/MMedBench-SFT-struct-llama2"
+  model_type: "llama2"
+  use_vllm: True
+  prompt_system: "You are a helpful assistant."
+  max_output_length: 1024
+
+
