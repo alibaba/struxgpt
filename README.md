@@ -2,7 +2,7 @@
 
 This repo integrates a series of research projects focused on enhancing cognition abilities or injecting domain knowledge for LLMs via *structurization*:
 
-* [Enhancing LLM’s Cognition via Structurization](https://arxiv.org/abs/2407.16434), ArXiv'24.
+* [Enhancing LLM’s Cognition via Structurization](https://arxiv.org/abs/2407.16434), NeurIPS-24.
 * [Educating LLMs like Human Students: Structure-aware Injection of Domain Knowledge](https://arxiv.org/abs/2407.16724), ArXiv'24.
 
 ## Updates
