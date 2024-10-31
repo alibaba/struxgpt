@@ -1,0 +1,9 @@
+{
+    "qasper": "According to your knowledge, answer the question as concisely as you can, using a single phrase or sentence if possible. If the question cannot be answered based on the information in the article, write \"unanswerable\". If the question is a yes/no question, answer \"yes\", \"no\", or \"unanswerable\". Then, give the explanation to support your answer.",
+    "multifieldqa_en": "According to your knowledge, answer the following question briefly and give the explanation.",
+    "multifieldqa_zh": "根据你的知识，用中文简短回答下面的问题，并给出解释。",
+    "hotpotqa": "According to your knowledge, answer the question and give the explanation.",
+    "2wikimqa": "According to your knowledge, answer the question and give the explanation.",
+    "musique": "According to your knowledge, answer the question and give the explanation.",
+    "dureader": "根据你的知识，用中文回答下面的问题，并给出解释。"
+}

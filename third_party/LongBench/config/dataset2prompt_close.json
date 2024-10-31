@@ -1,0 +1,9 @@
+{
+    "qasper": "According to your knowledge, answer the question as concisely as you can, using a single phrase or sentence if possible. If the question cannot be answered based on the information in the article, write \"unanswerable\". If the question is a yes/no question, answer \"yes\", \"no\", or \"unanswerable\". Do not provide any explanation.",
+    "multifieldqa_en": "According to your knowledge, answer the following question briefly. Only give me the answer and do not output any other words.",
+    "multifieldqa_zh": "根据你的知识，用中文简短回答下面的问题，只告诉我答案，不要输出任何其他字词。",
+    "hotpotqa": "Answer the question based on your knowledge. Only give me the answer and do not output any other words.",
+    "2wikimqa": "Answer the question based on your knowledge. Only give me the answer and do not output any other words.",
+    "musique": "Answer the question based on your knowledge. Only give me the answer and do not output any other words.",
+    "dureader": "根据你的知识，用中文回答下面的问题。"
+}
