@@ -29,7 +29,6 @@ from src.models.struxgpt_base import PreTrainedLLM
 from src.models.struxgpt_v2 import StruXGPT, StructItem
 
 sys.path.append(osp.dirname(__file__))
-from rag import LlamaIndexRetriever
 from utils import format_demo_qa, format_trainval_qa
 
 MAX_STRUCT_LEN = 1024
@@ -38,7 +37,6 @@ BATCH_SIZE = 8
 GENERATOR_LLM = 'config/llama2_7b.yaml'
 
 model = StruXGPT(debug=True)
-
 
 ################ MMedBench ################
 subsets = ['English', 'Chinese', 'French', 'Japanese', 'Russian', 'Spanish']
@@ -66,7 +64,7 @@ def preprocess_mmedbench(
     
     sft_train_path = f'{train_root}/mmedbench_instruct_train_sft.json'
     if not osp.exists(sft_train_path):
-        mmedbench_gen_struct_train(data_root, corpus_struct_path, cpt_train_path, 
+        mmedbench_gen_struct_train(data_root, corpus_struct_path, sft_train_path, 
                                    mode='sft')
     
     print('Done.')
@@ -291,7 +289,7 @@ def mmedbench_gen_struct_train(data_root, corpus_struct_path, train_data_path,
 
     if mode == 'cpt':
         for lang, books in book2structs.items():
-            for book_struct in books:
+            for book_struct in tqdm(books, desc=lang):
                 bookname = book_struct.scope
 
                 book_dict_temp = book_struct.to_json(disp=True)
@@ -372,7 +370,8 @@ def mmedbench_gen_struct_train(data_root, corpus_struct_path, train_data_path,
                         prompt_template_ssft_gen, book_struct_cpy, 
                         chunk_titles, chunk_contents,
                         idx=f'ssft_{lang}_{qi}', prompt_only=True,
-                        question=question, answer=answer, rationale=rationale
+                        question=question, answer=answer, rationale=rationale,
+                        lang=lang
                     )
                 )
                 ssft_gen_data_all[-1]['raw_qa'] = deepcopy(raw_qa)
@@ -468,7 +467,8 @@ def mmedbench_gen_struct_train(data_root, corpus_struct_path, train_data_path,
                         prompt_template_ssft2_gen, book_struct_cpy, 
                         chunk_titles, chunk_contents,
                         idx=f'ssft_{lang}_{qi}', prompt_only=True,
-                        question=question, answer=answer, rationale=rationale
+                        question=question, answer=answer, rationale=rationale,
+                        lang=lang
                     )
                 )
                 ssft2_gen_data_all[-1]['raw_qa'] = deepcopy(raw_qa)
@@ -552,6 +552,8 @@ def mmedbench_mapping_qa_to_corpus(
     book2structs: Dict[str, List["StructItem"]],
     index_path: str, data_root: str
 ):
+    from src.models.rag import LlamaIndexRetriever
+
     os.makedirs(index_path, exist_ok=True)
     chunks_all: List[Dict[str, str]] = []
     chunk_size = 1024

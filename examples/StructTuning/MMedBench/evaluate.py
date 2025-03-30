@@ -27,15 +27,22 @@ from utils import format_trainval_qa, eval_accuracy
 BATCH_SIZE = 8
 
 
-def mmedbench_build_test_data(data_dir):
+def mmedbench_build_test_data(data_dir, is_with_rationale=False, use_alpaca=False, 
+                              use_cot=True, retriever=None, show_progress=False, subset=None):
     data_dict_all: Dict[str, Tuple[List[str]]] = {}
+    kwargs = {"is_with_rationale": is_with_rationale, "use_alpaca": use_alpaca,
+              "use_cot": use_cot, "retriever": retriever}
     for path in sorted(glob(f'{data_dir}/*jsonl')):
         lang = osp.basename(path).split('.')[0]
+        if subset is not None and lang not in subset:
+            continue
         data_dict_all[lang] = ([], [])
-        for src_dict in load_auto(path):
+        pbar = load_auto(path)
+        if show_progress:
+            pbar = tqdm(pbar, desc=lang)
+        for src_dict in pbar:
+            prompt, answer_id, _, _ = format_trainval_qa(lang, src_dict, **kwargs)
             # TODO: temporal solution
-            prompt, answer_id, _, _ = format_trainval_qa(lang, src_dict, is_with_rationale=False, 
-                                                         use_alpaca=False, use_cot=True)
             prompt = prompt.replace(' Think step by step.', '')
             data_dict_all[lang][0].append(prompt)
             data_dict_all[lang][1].append(answer_id)
@@ -44,13 +51,16 @@ def mmedbench_build_test_data(data_dir):
 
 
 def mmedbench_parse_answer(answer: str):
-    if answer.startswith('###'):
+    answer = answer.strip()
+    if answer.startswith('#'):
         pattern = "OPTION (.*) IS CORRECT"
         # answer = answer.split('OPTION ')[1].split()[0]
     else:
-        pattern = "(.*). "
+        pattern = " (.*). "
 
     res = re.findall(pattern, answer)
+    if len(res) == 0:  # TODO: compatible with InternLM2
+        res = re.findall(" (.*). ", answer)
     return res[0] if len(res) else answer
 
 

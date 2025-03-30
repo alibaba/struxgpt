@@ -8,7 +8,7 @@ import yaml
 from multiprocessing import Pool
 
 from src.utils.io import load_file, load_jsonl
-from src.utils.str import white_space_fix, is_zh, is_empty, upper_start, remove_punc, set_punc
+from src.utils.str import white_space_fix, is_zh, is_empty, upper_start, remove_punc, set_punc, PUNCTUATION
 from src.utils.util import multiprocess_call
 from src.models.struxgpt_base import StruXGPTBase, AspectItemBase, StructItemBase, StructConfig
 
@@ -694,8 +694,8 @@ class StruXGPT(StruXGPTBase):
         # 处理根节点
         if is_root:
             mindmap = '\n'.join(lines)
-            for flag in highlights:
-                assert f'**{flag}**' in mindmap, f'\n{mindmap}\n\n{flag}'
+            # for flag in highlights:
+            #     assert f'**{flag}**' in mindmap, f'\n{mindmap}\n\n{flag}'
             return mindmap
         else:
             return lines
@@ -787,6 +787,10 @@ class StruXGPT(StruXGPTBase):
             ]
             explanation = '\n'.join(line for line in explanation.splitlines() \
                                         if all(flag not in line.lower() for flag in invalid_keywords))
+            for flag in ['**Integrating Mindmap Elements:**', '**Logical Deduction:**', '**Conclusion:**']:
+                explanation = explanation.replace(flag, '')
+            explanation = explanation[1:] if explanation[0] in PUNCTUATION else explanation
+            explanation = explanation.strip().replace('given', 'related')
         
             return {'idx': idx, 'question': question, 'answer': answer, 'explanation': explanation,
                     'ctx_content': chunk_contents, 'chunk_titles': chunk_titles}

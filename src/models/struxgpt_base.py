@@ -215,6 +215,7 @@ class ModelBase(object):
             else:
                 self.model = LLM(
                     self.model_name_or_path,
+                    tensor_parallel_size=torch.cuda.device_count(),
                     trust_remote_code=True,
                     # gpu_memory_utilization=0.6  # TODO
                 )

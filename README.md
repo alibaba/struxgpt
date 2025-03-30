@@ -7,6 +7,7 @@ This repo integrates a series of research projects focused on enhancing cognitio
 
 ## Updates
 
+- **30.03.2025**: Released pretrained [StruXGPT-v1-Qwen-7B](https://huggingface.co/StruXGPT/StruXGPT-v1-Qwen-7B) and [StruXGPT-v2-Llama2-7B](https://huggingface.co/StruXGPT/StruXGPT-v2-Llama2-7B) at huggingface. Have fun with them!
 - **27.08.2024**: Upload the codebase. Data and weights are coming.
 
 

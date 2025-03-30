@@ -12,8 +12,8 @@ def format_demo_qa(src_dict):
     return question, answer_id, rationale
 
 
-def format_trainval_qa(lang, src_dict, is_with_rationale, use_alpaca=True, 
-                       use_cot=False, rag=False, retriever=None, **kwargs):
+def format_trainval_qa(lang, src_dict, is_with_rationale, use_alpaca=False, 
+                       use_cot=False, retriever=None, **kwargs):
     question = src_dict["question"]
     options = kwargs.get('options', '')
     if options == '':
@@ -29,8 +29,10 @@ def format_trainval_qa(lang, src_dict, is_with_rationale, use_alpaca=True,
         answer_id = answer_id.replace(' OR ', ',')
     rationale = src_dict["rationale"]
     
+    rag = retriever is not None
     if rag:
-        assert not use_cot
+        if is_with_rationale:
+            raise Warning("`is_with_rationale` is deprecated in RAG mode.")
         references = retriever.retrieve(question, return_text=True)
         references = '\n'.join(references)
     else:
@@ -41,38 +43,27 @@ def format_trainval_qa(lang, src_dict, is_with_rationale, use_alpaca=True,
         "Write a response that appropriately completes the request.\n\n"
         "### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:"
     )
-    response = answer_id
     if is_with_rationale:
+        data_with_rationale = {
+            "instruction" : f"You're a {lang} doctor, kindly address the medical queries according to the patient's account in {lang}. Let’s solve this step-by-step. You should first give the reason in {lang} for your choice. Then you should give the right answer index of the question.",
+            "input":f"###Question: {question}\nWhich of the following is the best treatment for this patient?\n\n###Options:\n{options}",
+            "output":f"###Rationale: {rationale}\n\n###Answer: OPTION {answer_id} IS CORRECT."
+        }
         if use_alpaca:
-            data_with_rationale = {
-                "instruction" : f"You're a {lang} doctor, kindly address the medical queries according to the patient's account in {lang}. Let’s solve this step-by-step. You should first give the reason in {lang} for your choice. Then you should give the right answer index of the question.",
-                "input":f"###Question: {question}\nWhich of the following is the best treatment for this patient?\n\n###Options:\n{options}",
-                "output":f"###Rationale: {rationale}\n\n###Answer: OPTION {answer_id} IS CORRECT."
-            }
             prompt = alpaca_prompt_template.format(**data_with_rationale)
-            response = data_with_rationale['output']
         else:
-            prompt = (
-                f"You're a {lang} doctor, kindly address the medical queries according to the patient's account in {lang}.\n\n"
-                f"###Question:\n{question}\n\n"
-                f"###Options:\n{options}\n"
-            )
-            if use_cot:
-                prompt += "Which option is the best treatment for this patient? Think step by step."
-                response = f'{answer_id}\n\n{rationale}\nOverall, the answer is: {answer_id}'
-            else:
-                prompt += "Answer with the best option index directly. Do not output any other words."
+            prompt = data_with_rationale['instruction'] + '\n\n' + data_with_rationale['input']
+        response = data_with_rationale['output']
     else:
+        data_without_rationale = {
+            "instruction" : f"You're a {lang} doctor, kindly address the medical queries according to the patient's account. Answer with the best option(s) directly.",
+            "input":f"###Question: {question}\nWhich of the following is the best treatment for this patient?\n\n###Options:\n{options}",
+            "output":f"###Answer: OPTION {answer_id} IS CORRECT."
+        }    
         if use_alpaca:
-            data_without_rationale = {
-                "instruction" : f"You're a {lang} doctor, kindly address the medical queries according to the patient's account. Answer with the best option directly.",
-                "input":f"###Question: {question}\nWhich of the following is the best treatment for this patient?\n\n###Options:\n{options}",
-                "output":f"###Answer: OPTION {answer_id} IS CORRECT."
-            }    
             prompt = alpaca_prompt_template.format(**data_without_rationale)
-            response = data_without_rationale['output']
         else:
-            prompt = f"You're a {lang} doctor, kindly address the medical queries according to the patient's account in {lang}.\n\n"
+            prompt = f"You're a {lang} doctor, kindly address the medical queries according to the patient's account. Answer with the best option directly.\n\n"
             if rag:
                 prompt += f"Here are some possibly related references:\n###References\n```\n{references}\n```\n"
                 prompt += 'Answer the following question based on the references as well as your own knowledge.\n\n'
@@ -81,9 +72,18 @@ def format_trainval_qa(lang, src_dict, is_with_rationale, use_alpaca=True,
                 f"###Options:\n{options}\n"
             )
             if use_cot:
-                prompt += "Which option is the best treatment for this patient? Think step by step."
+                prompt += (
+                    "Which option is the best treatment for this patient "
+                    "(e.g., `# OPTION B IS CORRECT.` for single-choice answer or `# OPTION B,C IS CORRECT.` for multi-choice answer)?"
+                    "Think step by step."
+                )
             else:
-                prompt += "Answer with the best option index directly. Do not output any other words."
+                prompt += (
+                    "Answer with the best option index directly "
+                    "(e.g., `# OPTION B IS CORRECT.` for single-choice answer or `# OPTION B,C IS CORRECT.` for multi-choice answer). "
+                    "Do not output explanations."
+                )
+        response = data_without_rationale['output']
 
     return prompt, answer_id, rationale, response
 

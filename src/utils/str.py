@@ -8,6 +8,7 @@ from tqdm import tqdm
 from typing import List
 
 PUNCTUATION = string.punctuation + r'。，？：；！、【】｜'
+INVALID_PUNC = f"[{re.escape('[]-_`')}]"
 
 
 def is_zh(s: str, ratio=0.3):
@@ -29,6 +30,7 @@ def remove_punc(text: str, lowercase=False):
             pass
         else:
             text = text[:1].lower() + text[1:]
+    text = re.sub(INVALID_PUNC, "", text).strip()
     return text
 
 

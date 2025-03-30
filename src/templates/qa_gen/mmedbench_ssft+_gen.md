@@ -32,7 +32,7 @@ Meanwhile, here are detailed contents regarding the specific knolwedge points:
 
 Your task is to design a medical question-answer pair, and logically deduce the diagnosis and explain the reasoning behind it step by step. Here is an example for reference. Do not directly copy it.
 
-# Output Example
+# QA Example
 
 ## Question
 ```
@@ -51,36 +51,38 @@ Your task is to design a medical question-answer pair, and logically deduce the 
 
 # Task Instruction
 
-Now, design a medical question with four options for single-choice test, and give the correct answer. Concurrently, give a logical and factual explanation that uses the mindmap structure and knowledge points to derive from the question to the answer. The explanation should include:
+Now, design a medical question with several options for multi-choice test, and give the correct answer(s). Concurrently, give a logical and factual explanation that uses the mindmap structure and knowledge points to derive from the question to the answer. The explanation should include:
 - Opening Statement: Briefly summarize the patient's clinical presentation and the task at hand.
 - Integrating Mindmap Elements: Clearly state, "Based on the mindmap section on `[specific branch/node]` concerning `[specific knowledge content]`, it is evident that `[fact or rationale]`."
 - Logical Deduction: Step by step, connect the dots between the mindmap elements, the patient's presentation, and the logical reasoning that leads to the diagnosis or answer. Use a narrative that is easy to follow.
 - Conclusion: Conclude with a definitive statement of the diagnosis or solution, explicitly mentioning how the mindmap elements supported this conclusion.
 Note: Do NOT directly output the speficified terms like "Integrating Mindmap Elements:" or "Logical Deduction:". Just state the corresponding content.
 
-Use the same language as the provided example (in English/中文/français/日本語/русск/español), and adopt the given symbols to format your output:
+Use the same language as the provided example (in {lang}), and adopt the given symbols to format your output:
 
 # Response
 
 ## Question
 ```
-[The clinical scenario question goes here. Use English/中文/français/日本語/русск/español.]
+[The clinical scenario question goes here. Use {lang}.]
 ```
 
 ## Options
 ```
-A. [Option A goes here. Use English/中文/français/日本語/русск/español.]
-B. [Option B goes here. Use English/中文/français/日本語/русск/español.]
-C. [Option C goes here. Use English/中文/français/日本語/русск/español.]
-D. [Option D goes here. Use English/中文/français/日本語/русск/español.]
+A. [Option A goes here. Use {lang}.]
+B. [Option B goes here. Use {lang}.]
+C. [Option C goes here. Use {lang}.]
+D. [Option D goes here. Use {lang}.]
+E. [Option E goes here. Use {lang}.]
+[More or less options if necessary. The number of options mush align with the provided QA example.]
 ```
 
 ## Answer
 ```
-[The correct option(s) goes here. Use English/中文/français/日本語/русск/español.]
+[The correct option(s) index goes here, such as B for single-choice QA or A,B for multi-choice QA.]
 ```
 
 ## Explanation
 ```
-[The explanation goes here. Use English/中文/français/日本語/русск/español.]
+[The explanation goes here. Use {lang}.]
 ```

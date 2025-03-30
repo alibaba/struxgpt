@@ -17,3 +17,6 @@ spacy>=3.7.2
 uvicorn
 vllm>=0.2.1
 xformers>=0.0.22
+
+llama-index
+llama-index-embeddings-huggingface

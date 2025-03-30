@@ -1,7 +1,9 @@
-data/app/*/
-data/infer/*/
-data/tune/*/
-examples/*/debug.py
+data/
+data
+weights/
+weights
+pretrained/
+pretrained
 third_party/LongBench/data*/
 third_party/LongBench/pred*/
 third_party/AttrScore/AttrScore/
@@ -9,7 +11,7 @@ third_party/FActScore/.cache/
 third_party/FActScore/data/
 third_party/LLaMA-Factory/data/*/
 third_party/LLaMA-Factory/output/
-weights/
 **/__pycache__/
 **/.DS_Store
 nohup*
+*debug.py
